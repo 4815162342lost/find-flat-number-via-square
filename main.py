@@ -28,12 +28,12 @@ while args.max_flat_number_in_entrance+1<=args.max_flat_number+1:
 
 logs=open('/tmp/1.log', 'a')
 
-def check_flat(number, exception_count=0, e=None, json_e=None):
+def check_flat(number, exception_count, e=None):
     try:
         if exception_count>1:
-            print(f"Error with number {number}, exceprion: {e}, json: {json_e}")
+            print(f"Error with number {number}, exceprion: {e}")
             return 0
-        r=requests.post("https://www.avito.ru/web/1/domoteka/previewReport", json={'key' : args.main_kadastr_num + str(args.number)}, headers={"user-agent" : "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:82.0) Gecko/20100101 Firefox/82.0"} )
+        r=requests.post("https://www.avito.ru/web/1/domoteka/previewReport", json={'key' : args.main_kadastr_num + str(number)}, headers={"user-agent" : "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:82.0) Gecko/20100101 Firefox/82.0"} )
         rj=json.loads(r.text)
         logs.write(str(rj)+"\n")
         logs.flush()
@@ -42,10 +42,10 @@ def check_flat(number, exception_count=0, e=None, json_e=None):
                 if rj['result']['address'].endswith("кв " + str(i)):
                     print(f"Address: {rj['result']['address']}; Area: {rj['result']['area']} м²")
     except Exception as e:
-        exception_count+=1
+        exception_count=exception_count+1
         time.sleep(random.randint(8,15))
-        check_flat(number,exception_count, e, rj)
+        check_flat(number,exception_count, e)
 
 for i in range(args.min_last_kadastr_num,args.max_last_kadastr_num):
-    check_flat(i)
+    check_flat(i, 0)
     time.sleep(random.randint(8,15))
