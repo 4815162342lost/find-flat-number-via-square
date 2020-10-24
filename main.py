@@ -16,7 +16,7 @@ logs=open('/tmp/1.log', 'a')
 
 def check_flat(number, exception_count=0, e=None, json_e=None):
     try:
-        if exception_count!=0:
+        if exception_count>1:
             print(f"Error with number {number}, exceprion: {e}, json: {json_e}")
             return 0
         r=requests.post("https://www.avito.ru/web/1/domoteka/previewReport", json={'key' : '16:50:110805:' + str(number)}, headers={"user-agent" : "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:82.0) Gecko/20100101 Firefox/82.0"} )
