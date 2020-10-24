@@ -3,14 +3,28 @@ import requests
 import time
 import random
 import json
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-m", "--min_flat_number", type=str, required=True, help="minimum flat number")
+parser.add_argument("-n", "--max_flat_number", type=str, required=True, help="maximiun flat number")
+parser.add_argument("-n", "--max_flat_number_in_entrance", type=str, required=True, help="maximiun flat number in first entrance")
+parser.add_argument("-s", "--floors_number", type=str, required=True, help="number of floors on house (9 or 17 on typical russian houses)")
+parser.add_argument("-z", "--flats_in_floor", type=str, required=True, help="number of flats on floor (4 in 9th floors old houses)")
+parser.add_argument("-c", "--main_kadastr_num", type=str, required=True, help="kadastr number without last 4 numbers")
+parser.add_argument("-b", "--min_last_kadastr_num", type=str, required=True, help="minimum number of last 4 numbers in kadastr")
+parser.add_argument("-n", "--max_last_kadastr_num", type=str, required=True, help="maximum number of last 4 numbers in kadastr")
+parser.add_argument("-p", "--min_area", type=str, required=True, help="min area of apartments")
+parser.add_argument("-o", "--max_area", type=str, required=True, help="max area of apartments")
+parser.add_argument("-i", "--street_name", type=str, required=True, help="full street name")
+args=parser.parse_args()
 
 approved_flats=[]
 
-a=133; b=145
-while b<=217:
-    for i in range(a, b):
+while args.max_flat_number_in_entrance<=args.max_flat_number+1:
+    for i in range(args.min_flat_number, args.max_flat_number_in_entrance+1):
         approved_flats.append(i)
-    a=a+36; b=b+36
+    args.min_flat_number=args.min_flat_number+args.floors_number*args.flats_in_floor; args.max_flat_number_in_entrance=args.max_flat_number_in_entrance+args.min_flat_number+args.floors_number*args.flats_in_floor
 
 logs=open('/tmp/1.log', 'a')
 
